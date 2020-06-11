@@ -1,0 +1,38 @@
+.app{
+  border-style: solid;
+  min-height: 50em;
+}
+
+.para {
+  display: block;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  text-align: justify;
+}
+
+.box {
+  border-style: dashed;
+  padding: 1em 1.5em;
+  margin-top: 1em;
+  
+}
+
+.myButton {
+  width: 75;
+  background: #ff0000;
+  color: #ffffff;
+}
+
+.myButton :disabled {
+  background: #666666;
+  color: #303030;
+}
+
+.myButton :enabled {
+  background: #ff0000;
+}
+
+.phone { 
+  width: 50.9%;
+  height: auto; 
+}
