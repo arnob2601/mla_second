@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import {
   Container,
   Row,
@@ -31,8 +31,8 @@ const Summary = ({
   ...props
 }) => {
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    window.scrollTo(0, 0);
+  }, []);
   if (stateFirst.isStranger) back = address[4];
   else if (stateFirst.isAcquaintance) back = address[3];
   else if (stateFirst.isColleague) back = address[2];
@@ -185,8 +185,8 @@ const Summary = ({
   });
 
   const handleChoice = (e) => {
-    setStateFirst({ ...stateFirst, choice: e.target.value} )
-  }
+    setStateFirst({ ...stateFirst, choice: e.target.value });
+  };
 
   return (
     <div>
@@ -201,8 +201,8 @@ const Summary = ({
           to share with different entities. Please review your selections before
           moving forward to the next step. If needed, you can go back to a
           previous step and make changes in your selection. In the next step,
-          you will create passwords to protect your apps from unauthorized
-          access.
+          you will assign information sensitivity level to each of the entities
+          based on the app that you are sharing with them.
         </p>
         <Row xs="2">
           {stateFirst.isFamily && familyCards}
@@ -217,13 +217,26 @@ const Summary = ({
           your phone that you are not comfortable to share with anyone, in other
           words, only you will have access to them?
         </p>
-        <Label>        
-        <input type="radio" name="choice" value="yes" checked={stateFirst.choice === "yes"} onChange={handleChoice}/>
-        Yes
-        </Label><br/>
-        <Label>        
-        <input type="radio" name="choice" value="no" checked={stateFirst.choice === "no"} onChange={handleChoice}/>
-        No
+        <Label>
+          <input
+            type="radio"
+            name="choice"
+            value="yes"
+            checked={stateFirst.choice === "yes"}
+            onChange={handleChoice}
+          />{" "}
+          Yes
+        </Label>
+        <br />
+        <Label>
+          <input
+            type="radio"
+            name="choice"
+            value="no"
+            checked={stateFirst.choice === "no"}
+            onChange={handleChoice}
+          />{" "}
+          No
         </Label>
       </Container>
       <div
@@ -236,7 +249,7 @@ const Summary = ({
           </Button>
         </Link>
 
-        <Link to="/pass">
+        <Link to="/sensitivity">
           <Button style={{ marginLeft: 8 + "em" }} color="primary">
             Next
           </Button>

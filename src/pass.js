@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Col, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./App.css";
@@ -18,16 +18,18 @@ const Password = ({
   colleague,
   acquaintance,
   stranger,
+  sensitivity,
   ...props
 }) => {
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    window.scrollTo(0, 0);
+  }, []);
   const famApp = Object.keys(family).map((key) => family[key]);
   const friApp = Object.keys(friend).map((key) => friend[key]);
   const colApp = Object.keys(colleague).map((key) => colleague[key]);
   const acqApp = Object.keys(acquaintance).map((key) => acquaintance[key]);
   const strApp = Object.keys(stranger).map((key) => stranger[key]);
+  const sen = Object.keys(sensitivity).map((key) => sensitivity[key]);
 
   let arrApp = [];
   let arrName = [];
@@ -92,7 +94,7 @@ const Password = ({
       temp = [];
     }
   }
-  console.log(arrPassfields);
+  //console.log(arrPassfields);
   const pushData = async () => {
     await fetch(
       `http://${stateFirst.ipAddress}:4000/password/add?user=${stateFirst.user}&sharee=DUMMY&pass=DUMMY`
@@ -119,7 +121,10 @@ const Password = ({
       if (password[i] === undefined || checkPassword[i] === undefined) {
         Invalid = true;
         break;
-      } else if (password[i] !== checkPassword[i] || password[i].length < 4) {
+      } else if (
+        password[i] !== checkPassword[i] ||
+        password[i].length < sen[i] * 4
+      ) {
         Invalid = true;
         break;
       }
@@ -131,7 +136,7 @@ const Password = ({
         meInvalid = true;
       } else if (
         password["me"] !== checkPassword["me"] ||
-        password["me"].length < 4
+        password["me"].length < sensitivity["me"] * 4
       ) {
         meInvalid = true;
       }
@@ -171,7 +176,7 @@ const Password = ({
       <div>
         <Row>
           <Col>
-            {password[idx] && password[idx].length < 4 && (
+            {password[idx] && password[idx].length < sensitivity[idx] * 4 && (
               <span style={{ color: "red" }}>Password too short!</span>
             )}
             {flag && <span style={{ color: "red" }}>Not Unique!</span>}
@@ -192,10 +197,16 @@ const Password = ({
   };
 
   const handleEntityChange = (idx) => (e) => {
-    setPassword({ ...password, [idx]: e.target.value });
+    setPassword({
+      ...password,
+      [idx]: e.target.value.substring(0, sensitivity[idx] * 4),
+    });
   };
   const handleCheckEntityChange = (idx) => (e) => {
-    setCheckPassword({ ...checkPassword, [idx]: e.target.value });
+    setCheckPassword({
+      ...checkPassword,
+      [idx]: e.target.value.substring(0, sensitivity[idx] * 4),
+    });
   };
 
   const getSharee = (rel) => {
@@ -230,7 +241,7 @@ const Password = ({
       <div key={idx} style={{ marginTop: 1 + "em" }}>
         <Col>
           <Row>
-            <Col>Password for {text}</Col>
+            <Col>Password for {text}:</Col>
           </Row>
           <Row>
             <Col>
@@ -267,7 +278,7 @@ const Password = ({
         <Col>
           Password for '{text}' (it will give you access to all of the apps
           including the ones that you are not comfortable to share with anyone
-          else)
+          else):
           <Row>
             <Col>
               <input
@@ -294,6 +305,18 @@ const Password = ({
       </div>
     );
   };
+
+  const showTable = arrPassfields.map((val, id) => {
+    console.log(val, sen[id], sen[id] * 4);
+    return (
+      <Row key={id}>
+        <Col>{getSharee(val)}</Col>
+        <Col>{sen[id]}</Col>
+        <Col>{sen[id] * 4}</Col>
+      </Row>
+    );
+  });
+
   return (
     <div>
       <Container fluid>
@@ -319,12 +342,26 @@ const Password = ({
             </span>
           )}
           <br />
-          <br /> Your password must be minimum four characters long.
-          <br />
-          <br /> Create strong passwords. You can consider the sensitivity of
-          apps shared with an entity, while creating a password for that entity
-          to protect those apps from unauthorized access.
+          <br /> Create strong passwords. The length of a password for an entity
+          depends upon your assigned sensitivity level in the previous step. The
+          password length for an entity needs to be four times your assigned
+          sensitivity level for that entity. Follow the chart below to create a
+          password of appropriate length for each entity.
         </p>
+        <Row style={{fontWeight: "bold"}}>
+          <Col>Entity</Col>
+          <Col>Sensitivity Level You Assigned</Col>
+          <Col>Required Length of Password</Col>
+        </Row>
+        {showTable}
+        {stateFirst.choice === "yes" && (
+          <Row>
+            <Col>Only Me</Col>
+            <Col>{sensitivity["me"]}</Col>
+            <Col>{sensitivity["me"] * 4}</Col>
+          </Row>
+        )}
+        <br />
         {showPass}
         {stateFirst.choice === "yes" && onlyMePass()}
       </Container>
@@ -332,7 +369,7 @@ const Password = ({
         style={{ marginTop: 3 + "em", marginBottom: 3 + "em" }}
         className="text-center"
       >
-        <Link to="/summary">
+        <Link to="/sensitivity">
           <Button style={{ marginRight: 8 + "em" }} color="primary">
             Back
           </Button>

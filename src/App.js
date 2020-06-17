@@ -11,6 +11,7 @@ import Colleagues from "./colleague";
 import Acquaintance from "./acquaintance";
 import Stranger from "./stranger";
 import Summary from "./summary";
+import Sensitivity from "./sensitivity";
 import Password from "./pass";
 import Finish from "./finish";
 import "./App.css";
@@ -20,7 +21,7 @@ const App = () => {
   const [app, setApp] = useState(icons);
   const [stateFirst, setStateFirst] = useState({
     name: "",
-    user: "PS10",
+    user: "test",
     ipAddress: "73.65.252.244",
     choice: "yes",
     family: [{ name: "" }],
@@ -39,6 +40,7 @@ const App = () => {
   const [colleague, setColleague] = useState({});
   const [acquaintance, setAcquaintance] = useState({});
   const [stranger, setStranger] = useState({});
+  const [sensitivity, setSensitivity] = useState({});
   const [password, setPassword] = useState({});
   const [checkPassword, setCheckPassword] = useState({});
   return (
@@ -186,6 +188,23 @@ const App = () => {
                   )}
                 />
                 <Route
+                  path="/sensitivity"
+                  render={(props) => (
+                    <Sensitivity
+                      stateFirst={stateFirst}
+                      setStateFirst={setStateFirst}
+                      family={family}
+                      friend={friend}
+                      colleague={colleague}
+                      acquaintance={acquaintance}
+                      stranger={stranger}
+                      sensitivity={sensitivity}
+                      setSensitivity={setSensitivity}
+                      {...props}
+                    />
+                  )}
+                />
+                <Route
                   path="/pass"
                   render={(props) => (
                     <Password
@@ -200,6 +219,7 @@ const App = () => {
                       colleague={colleague}
                       acquaintance={acquaintance}
                       stranger={stranger}
+                      sensitivity={sensitivity}
                       {...props}
                     />
                   )}
