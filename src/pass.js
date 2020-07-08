@@ -19,6 +19,8 @@ const Password = ({
   acquaintance,
   stranger,
   sensitivity,
+  time,
+  setTime,
   ...props
 }) => {
   useEffect(() => {
@@ -96,9 +98,12 @@ const Password = ({
   }
   //console.log(arrPassfields);
   const pushData = async () => {
-    await fetch(
-      `http://${stateFirst.ipAddress}:4000/password/add?user=${stateFirst.user}&sharee=DUMMY&pass=DUMMY`
-    ).catch((err) => console.error(err));
+    let now = new Date().getTime();
+    let diff = now - time.start;
+    let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    let timing = minutes+":"+seconds;
+    //console.log(timing);
     arrPassfields.map(async (rel, idx) => {
       let text = getSharee(rel);
       await fetch(
@@ -111,6 +116,9 @@ const Password = ({
         `http://${stateFirst.ipAddress}:4000/password/add?user=${stateFirst.user}&sharee=${text}&pass=${password["me"]}`
       ).catch((err) => console.error(err));
     }
+    await fetch(
+      `http://${stateFirst.ipAddress}:4000/timing/add?user=${stateFirst.user}&time=${timing}`
+    ).catch((err) => console.error(err));
   };
 
   const validity = () => {
@@ -199,13 +207,15 @@ const Password = ({
   const handleEntityChange = (idx) => (e) => {
     setPassword({
       ...password,
-      [idx]: e.target.value.substring(0, sensitivity[idx] * 4),
+      [idx]: e.target.value,
+      //[idx]: e.target.value.substring(0, sensitivity[idx] * 4),
     });
   };
   const handleCheckEntityChange = (idx) => (e) => {
     setCheckPassword({
       ...checkPassword,
-      [idx]: e.target.value.substring(0, sensitivity[idx] * 4),
+      [idx]: e.target.value,
+      //[idx]: e.target.value.substring(0, sensitivity[idx] * 4),
     });
   };
 
@@ -307,7 +317,6 @@ const Password = ({
   };
 
   const showTable = arrPassfields.map((val, id) => {
-    console.log(val, sen[id], sen[id] * 4);
     return (
       <Row key={id}>
         <Col>{getSharee(val)}</Col>
@@ -346,12 +355,13 @@ const Password = ({
           depends upon your assigned sensitivity level in the previous step. The
           password length for an entity needs to be four times your assigned
           sensitivity level for that entity. Follow the chart below to create a
-          password of appropriate length for each entity.
+          password of <span style={{ fontWeight: "bold" }}>required</span>{" "}
+          length for each entity.
         </p>
-        <Row style={{fontWeight: "bold"}}>
+        <Row style={{ fontWeight: "bold" }}>
           <Col>Entity</Col>
           <Col>Sensitivity Level You Assigned</Col>
-          <Col>Required Length of Password</Col>
+          <Col>Minimum Length of Password</Col>
         </Row>
         {showTable}
         {stateFirst.choice === "yes" && (

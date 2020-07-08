@@ -1,12 +1,21 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { Button, Container } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./App.css";
 
-const Welcome = () => {
+const Welcome = ({ time, setTime }) => {
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    window.scrollTo(0, 0);
+  }, []);
+
+  const pushData = async () => {
+    let now = new Date().getTime();
+    setTime({ ...time, start: now });
+    /*await fetch(
+      `http://${stateFirst.ipAddress}:4000/timing/add?user=${stateFirst.user}`
+    ).catch((err) => console.error(err));*/
+  };
+
   return (
     <div className="welcome">
       <Container fluid>
@@ -37,6 +46,7 @@ const Welcome = () => {
                 marginTop: 2 + "em",
                 marginBottom: 10 + "em",
               }}
+              onClick={pushData}
             >
               Start
             </Button>

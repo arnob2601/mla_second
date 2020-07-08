@@ -21,7 +21,7 @@ const App = () => {
   const [app, setApp] = useState(icons);
   const [stateFirst, setStateFirst] = useState({
     name: "",
-    user: "test",
+    user: "treatment",
     ipAddress: "73.65.252.244",
     choice: "yes",
     family: [{ name: "" }],
@@ -43,6 +43,7 @@ const App = () => {
   const [sensitivity, setSensitivity] = useState({});
   const [password, setPassword] = useState({});
   const [checkPassword, setCheckPassword] = useState({});
+  const [time, setTime] = useState({ start: 0, end: 0 });
   return (
     <div>
       <Container fluid>
@@ -58,8 +59,13 @@ const App = () => {
           <Col className="app" sm="12" md={{ size: 6, offset: 3 }}>
             <Router>
               <Switch>
-                <Route path="/" exact component={Welcome} />
-                {/*<Route path="/trailer" component={Trailer} />*/}
+                {/*<Route path="/" exact component={Welcome} />
+                <Route path="/trailer" component={Trailer} />*/}
+                <Route
+                  path="/"
+                  exact
+                  render={(props) => <Welcome time={time} setTime={setTime} />}
+                />
                 <Route
                   path="/sharing"
                   render={(props) => (
@@ -220,6 +226,8 @@ const App = () => {
                       acquaintance={acquaintance}
                       stranger={stranger}
                       sensitivity={sensitivity}
+                      time={time}
+                      setTime={setTime}
                       {...props}
                     />
                   )}

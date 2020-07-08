@@ -137,13 +137,6 @@ const Sensitivity = ({
     return text;
   };
 
-  /*const getValue = (id) => {
-    let val;
-    if (sensitivity[id] === undefined) val = "1";
-    else val = sensitivity[id];
-    return val;
-  };*/
-
   const handleChoice = (id) => (e) => {
     setSensitivity({ ...sensitivity, [id]: e.target.value });
   };
@@ -198,7 +191,9 @@ const Sensitivity = ({
           information and apps that you are comfortable to share with them
           (recall your selection of apps in the previous step). Here,{" "}
           <span style={{ fontWeight: "bold" }}>1 </span>
-          represents the lowest sensitivity level.
+          represents the lowest sensitivity level, meaning this sensitivity
+          should be assigned where there are no private or sensitive
+          information.
           {duplicate && (
             <span>
               <br />
