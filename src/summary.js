@@ -215,7 +215,8 @@ const Summary = ({
           We may have apps and information in our personal phone that we are not
           willing to share with others. Do you have such apps and information in
           your phone that you are not comfortable to share with anyone, in other
-          words, only you will have access to them?
+          words, only <span style={{ fontWeight: "bold" }}>You</span> will have
+          access to them?
         </p>
         <Label>
           <input

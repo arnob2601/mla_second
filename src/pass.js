@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Container, Row, Col, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./App.css";
+import { useState } from "react";
 
 let invalid = true;
 let duplicate;
@@ -26,6 +27,10 @@ const Password = ({
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  const [vis, setVis] = useState({
+    showOMP: false,
+    showOMRP: false,
+  });
   const famApp = Object.keys(family).map((key) => family[key]);
   const friApp = Object.keys(friend).map((key) => friend[key]);
   const colApp = Object.keys(colleague).map((key) => colleague[key]);
@@ -97,26 +102,26 @@ const Password = ({
     }
   }
   //console.log(arrPassfields);
-  const pushData = async () => {
+  const pushData = () => {
     let now = new Date().getTime();
     let diff = now - time.start;
     let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     let seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    let timing = minutes+":"+seconds;
+    let timing = minutes + ":" + seconds;
     //console.log(timing);
-    arrPassfields.map(async (rel, idx) => {
+    arrPassfields.map((rel, idx) => {
       let text = getSharee(rel);
-      await fetch(
-        `http://${stateFirst.ipAddress}:4000/password/add?user=${stateFirst.user}&sharee=${text}&pass=${password[idx]}`
+      fetch(
+        `http://${stateFirst.ipAddress}:4000/password/add?user=${stateFirst.user}&sensitivity=${sensitivity[idx]}&sharee=${text}&pass=${password[idx]}`
       ).catch((err) => console.error(err));
     });
     if (stateFirst.choice === "yes") {
       let text = "Only Me";
-      await fetch(
-        `http://${stateFirst.ipAddress}:4000/password/add?user=${stateFirst.user}&sharee=${text}&pass=${password["me"]}`
+      fetch(
+        `http://${stateFirst.ipAddress}:4000/password/add?user=${stateFirst.user}&sensitivity=${sensitivity["me"]}&sharee=${text}&pass=${password["me"]}`
       ).catch((err) => console.error(err));
     }
-    await fetch(
+    fetch(
       `http://${stateFirst.ipAddress}:4000/timing/add?user=${stateFirst.user}&time=${timing}`
     ).catch((err) => console.error(err));
   };
@@ -208,16 +213,21 @@ const Password = ({
     setPassword({
       ...password,
       [idx]: e.target.value,
-      //[idx]: e.target.value.substring(0, sensitivity[idx] * 4),
     });
   };
   const handleCheckEntityChange = (idx) => (e) => {
     setCheckPassword({
       ...checkPassword,
       [idx]: e.target.value,
-      //[idx]: e.target.value.substring(0, sensitivity[idx] * 4),
     });
   };
+
+  const changeOMP = () => {
+    setVis({...vis, showOMP: !vis.showOMP});
+  }
+  const changeOMRP = () => {
+    setVis({...vis, showOMRP: !vis.showOMRP});
+  }
 
   const getSharee = (rel) => {
     let text = "";
@@ -283,6 +293,21 @@ const Password = ({
   //Only Me
   const onlyMePass = () => {
     let text = "Only Me";
+    let msg1, msg2, pt1, pt2;
+    if (vis.showOMP === false) {
+      msg1 = "Show";
+      pt1 = "password";
+    } else {
+      msg1 = "Hide";
+      pt1 = "text";
+    }
+    if (vis.showOMRP === false) {
+      msg2 = "Show";
+      pt2 = "password";
+    } else {
+      msg2 = "Hide";
+      pt2 = "text";
+    }
     return (
       <div style={{ marginTop: 1 + "em" }}>
         <Col>
@@ -294,20 +319,22 @@ const Password = ({
               <input
                 style={{ width: "300px" }}
                 placeholder={"Type the password"}
-                type="password"
+                type={pt1}
                 onChange={handleEntityChange("me")}
                 value={password["me"]}
               />
+              <button onClick={changeOMP}>{msg1}</button>
             </Col>
             <Col>
               <input
                 style={{ width: "300px" }}
                 placeholder={"Retype the password to confirm"}
-                type="password"
+                type={pt2}
                 onChange={handleCheckEntityChange("me")}
                 value={checkPassword["me"]}
                 onPaste={(e) => e.preventDefault()}
               />
+              <button onClick={changeOMRP}>{msg2}</button>
             </Col>
           </Row>
           {showWarning("me")}

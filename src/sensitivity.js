@@ -206,10 +206,12 @@ const Sensitivity = ({
             <span>
               <br />
               <br />
-              The sensitivity level of apps and information accessible to only
-              you (‘Only Me’ below) should{" "}
-              <span style={{ fontWeight: "bold" }}>not</span> be lower than that
-              of any other entities.
+              <span style={{ color: "blue" }}>
+                The sensitivity level of apps and information accessible to only
+                you (‘Only Me’ below) should{" "}
+                <span style={{ fontWeight: "bold" }}>not</span> be lower than
+                that of any other entities.
+              </span>
             </span>
           )}
           <br />
