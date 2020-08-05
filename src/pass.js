@@ -28,8 +28,20 @@ const Password = ({
     window.scrollTo(0, 0);
   }, []);
   const [vis, setVis] = useState({
-    showOMP: false,
-    showOMRP: false,
+    pOM: false,
+    rOM: false,
+    p0: false,
+    p1: false,
+    p2: false,
+    p3: false,
+    p4: false,
+    p5: false,
+    r0: false,
+    r1: false,
+    r2: false,
+    r3: false,
+    r4: false,
+    r5: false,
   });
   const famApp = Object.keys(family).map((key) => family[key]);
   const friApp = Object.keys(friend).map((key) => friend[key]);
@@ -101,6 +113,13 @@ const Password = ({
       temp = [];
     }
   }
+
+  /*for (let i = 0; i < arrPassfields.length; i++) {
+      if (vis[i] === undefined) {
+        setVis({ ...vis, [i]: false });
+      }
+    }*/
+
   //console.log(arrPassfields);
   const pushData = () => {
     let now = new Date().getTime();
@@ -223,11 +242,11 @@ const Password = ({
   };
 
   const changeOMP = () => {
-    setVis({...vis, showOMP: !vis.showOMP});
-  }
+    setVis({ ...vis, pOM: !vis.pOM });
+  };
   const changeOMRP = () => {
-    setVis({...vis, showOMRP: !vis.showOMRP});
-  }
+    setVis({ ...vis, rOM: !vis.rOM });
+  };
 
   const getSharee = (rel) => {
     let text = "";
@@ -256,7 +275,23 @@ const Password = ({
 
   //Show Passfields
   const showPass = arrPassfields.map((rel, idx) => {
+    console.log(vis);
     let text = getSharee(rel);
+    let msg1, msg2, pt1 , pt2;
+    if (vis["p" + idx] === false) {
+      msg1 = "Show";
+      pt1 = "password";
+    } else if (vis["p" + idx] === true) {
+      msg1 = "Hide";
+      pt1 = "text";
+    }
+    if (vis["r" + idx] === false) {
+      msg2 = "Show";
+      pt2 = "password";
+    } else {
+      msg2 = "Hide";
+      pt2 = "text";
+    }
     return (
       <div key={idx} style={{ marginTop: 1 + "em" }}>
         <Col>
@@ -268,20 +303,30 @@ const Password = ({
               <input
                 style={{ width: "300px" }}
                 placeholder={"Type the password"}
-                type="password"
+                type={pt1}
                 onChange={handleEntityChange(idx)}
                 value={password[idx]}
               />
+              <button
+                onClick={() => setVis({ ...vis, ["p" + idx]: !vis["p" + idx] })}
+              >
+                {msg1}
+              </button>
             </Col>
             <Col>
               <input
                 style={{ width: "300px" }}
                 placeholder={"Retype the password to confirm"}
-                type="password"
+                type={pt2}
                 onChange={handleCheckEntityChange(idx)}
                 value={checkPassword[idx]}
                 onPaste={(e) => e.preventDefault()}
               />
+              <button
+                onClick={() => setVis({ ...vis, ["r" + idx]: !vis["r" + idx] })}
+              >
+                {msg2}
+              </button>
             </Col>
           </Row>
           {showWarning(idx.toString())}
@@ -294,14 +339,14 @@ const Password = ({
   const onlyMePass = () => {
     let text = "Only Me";
     let msg1, msg2, pt1, pt2;
-    if (vis.showOMP === false) {
+    if (vis.pOM === false) {
       msg1 = "Show";
       pt1 = "password";
     } else {
       msg1 = "Hide";
       pt1 = "text";
     }
-    if (vis.showOMRP === false) {
+    if (vis.rOM === false) {
       msg2 = "Show";
       pt2 = "password";
     } else {
