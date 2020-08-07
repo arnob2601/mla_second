@@ -275,7 +275,7 @@ const Password = ({
 
   //Show Passfields
   const showPass = arrPassfields.map((rel, idx) => {
-    console.log(vis);
+    //console.log(vis);
     let text = getSharee(rel);
     let msg1, msg2, pt1 , pt2;
     if (vis["p" + idx] === false) {

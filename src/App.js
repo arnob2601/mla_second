@@ -21,7 +21,7 @@ const App = () => {
   const [app, setApp] = useState(icons);
   const [stateFirst, setStateFirst] = useState({
     name: "",
-    user: "HP1",
+    user: "trial",
     ipAddress: "73.65.252.244",
     choice: "yes",
     family: [{ name: "" }],
@@ -184,6 +184,7 @@ const App = () => {
                     <Summary
                       stateFirst={stateFirst}
                       setStateFirst={setStateFirst}
+                      state={state}
                       family={family}
                       friend={friend}
                       colleague={colleague}

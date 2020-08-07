@@ -23,6 +23,7 @@ let back = "";
 const Summary = ({
   stateFirst,
   setStateFirst,
+  state,
   family,
   friend,
   colleague,
@@ -39,9 +40,22 @@ const Summary = ({
   else if (stateFirst.isFriend) back = address[1];
   else if (stateFirst.isFamily) back = address[0];
 
+  const pushData = async () => {
+    for (let i = 0; i < setDif.length; i++) {
+      await fetch(
+        `http://${stateFirst.ipAddress}:4000/onlyme/add?user=${stateFirst.user}&app=${setDif[i]}`
+      ).catch((err) => console.error(err));
+    }
+  };
+
+  const allApps = Object.keys(state).map((key) => state[key].title);
+  //Only Me apps filtering
+  const setA = new Set(allApps);
+  const setB = new Set();
   const famApps = Object.keys(family).map((key) => family[key]);
   const familyApps = famApps.map((x, pid) =>
     x.map((icon, idx) => {
+      setB.add(icon.title);
       return (
         <Card key={idx}>
           <Label>
@@ -71,6 +85,7 @@ const Summary = ({
   const friApps = Object.keys(friend).map((key) => friend[key]);
   const friendApps = friApps.map((x, pid) =>
     x.map((icon, idx) => {
+      setB.add(icon.title);
       return (
         <Card key={idx}>
           <Label>
@@ -100,6 +115,7 @@ const Summary = ({
   const colApps = Object.keys(colleague).map((key) => colleague[key]);
   const colleagueApps = colApps.map((x, pid) =>
     x.map((icon, idx) => {
+      setB.add(icon.title);
       return (
         <Card key={idx}>
           <Label>
@@ -129,6 +145,7 @@ const Summary = ({
   const acqApps = Object.keys(acquaintance).map((key) => acquaintance[key]);
   const acquaintanceApps = acqApps.map((x, pid) =>
     x.map((icon, idx) => {
+      setB.add(icon.title);
       return (
         <Card key={idx}>
           <Label>
@@ -158,6 +175,7 @@ const Summary = ({
   const strApps = Object.keys(stranger).map((key) => stranger[key]);
   const strangerApps = strApps.map((x, pid) =>
     x.map((icon, idx) => {
+      setB.add(icon.title);
       return (
         <Card key={idx}>
           <Label>
@@ -187,7 +205,8 @@ const Summary = ({
   const handleChoice = (e) => {
     setStateFirst({ ...stateFirst, choice: e.target.value });
   };
-
+  const setDif = [...new Set([...setA].filter((a) => !setB.has(a)))];
+  //console.log(Array.from(setDif));
   return (
     <div>
       <Container>
@@ -251,7 +270,11 @@ const Summary = ({
         </Link>
 
         <Link to="/sensitivity">
-          <Button style={{ marginLeft: 8 + "em" }} color="primary">
+          <Button
+            style={{ marginLeft: 8 + "em" }}
+            color="primary"
+            onClick={pushData}
+          >
             Next
           </Button>
         </Link>
